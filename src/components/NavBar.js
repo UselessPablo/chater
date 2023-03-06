@@ -3,6 +3,8 @@ import GoogleSignin from "../img/btn_google_signin_dark_pressed_web.png";
 import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+import Welcome from "./Welcome";
+import ChatBox from './ChatBox';
 
 
 const NavBar = () => {
@@ -17,6 +19,7 @@ const NavBar = () => {
   };
 
   return (
+    <>
     <nav className="nav-bar">
       <h1>Chater</h1>
       {user ? (
@@ -34,6 +37,8 @@ const NavBar = () => {
         </button>
       )}
     </nav>
+  {!user ? <Welcome /> : <ChatBox />}
+    </>
   );
 };
 
