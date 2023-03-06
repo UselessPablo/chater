@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/UselessPablo/chater.git/static/css/main.87ed2200.css",
-    "main.js": "/UselessPablo/chater.git/static/js/main.e86ea5d1.js",
-    "index.html": "/UselessPablo/chater.git/index.html",
-    "main.87ed2200.css.map": "/UselessPablo/chater.git/static/css/main.87ed2200.css.map",
-    "main.e86ea5d1.js.map": "/UselessPablo/chater.git/static/js/main.e86ea5d1.js.map"
+    "main.css": "/chater/static/css/main.87ed2200.css",
+    "main.js": "/chater/static/js/main.ad201a10.js",
+    "index.html": "/chater/index.html",
+    "main.87ed2200.css.map": "/chater/static/css/main.87ed2200.css.map",
+    "main.ad201a10.js.map": "/chater/static/js/main.ad201a10.js.map"
   },
   "entrypoints": [
     "static/css/main.87ed2200.css",
-    "static/js/main.e86ea5d1.js"
+    "static/js/main.ad201a10.js"
   ]
 }
