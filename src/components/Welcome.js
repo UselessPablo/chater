@@ -9,11 +9,12 @@ const Welcome = () => {
     const provider = new GoogleAuthProvider();
     signInWithRedirect(auth, provider);
   };
+  
   return (
     <main className="welcome">
       <h2>Bienvenido a Chater </h2>
-      <p>Chats instantaneos, por favor Logueate</p>
-      <p>Loguearse con Google</p>
+      <p>Chats instantaneos, por favor Logueate con Google</p>
+      <p> Ingresar</p>
       <button className="sign-in">
         <img
           onClick={googleSignIn}

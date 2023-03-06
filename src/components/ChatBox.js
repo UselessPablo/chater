@@ -35,7 +35,7 @@ const ChatBox = () => {
     <main className="chat-box">
       <div className="messages-wrapper">
         <span ref={scroll}></span>
-        <SendMessage scroll={scroll} />
+   <SendMessage scroll={scroll} />
         {messages?.map((message) => (
           <Message key={message.id} message={message} />
         ))}

@@ -12,13 +12,7 @@ function App() {
   return (
     <div className="App">
       <NavBar />
-      {!user ? (
-        <Welcome />
-      ) : (
-        <>
-          <ChatBox />
-        </>
-      )}
+      {!user ? <Welcome /> : <ChatBox />}
     </div>
   );
 }

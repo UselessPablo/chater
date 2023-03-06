@@ -4,7 +4,7 @@ import { auth, db } from "../firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 
-const SendMessage = ({scroll}) => {
+const SendMessage = () => {
   const [message, setMessage] = useState("");
 
  
@@ -23,7 +23,7 @@ const SendMessage = ({scroll}) => {
       uid,
     });
     setMessage("");
-    scroll.current.scrollIntoView({ behavior: "smooth" });
+   
   };
 
   return (
