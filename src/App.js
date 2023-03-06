@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar />
+      <NavBar basename={process.env.PUBLIC_URL} />
       {!user ? (
         <Welcome />
       ) : (
