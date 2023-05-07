@@ -1,12 +1,12 @@
 
-
+import { Box, Avatar } from "@mui/material";
 
 const Message = ({ message }) => {
   return (
-    <div className="chat__message">
-      <img src={message.user.photoURL} alt="User avatar" />
+    <Box className="chat__message">
+      <Avatar sx={{ width: '30px', height: '30px' }} src={message.user.photoURL} alt="User avatar" />
       <p>{message.message}</p>
-    </div>
+    </Box>
   );
 };
 

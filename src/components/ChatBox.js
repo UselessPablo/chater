@@ -34,7 +34,7 @@ const ChatBox = ({ user }) => {
     if (input !== "") {
       const newMessage = {
         message: input,
-        user: { displayName: user?.displayName, photoURL: user?.photoURL },
+        user: { displayName: user.displayName, photoURL: user.photoURL },
         timestamp: serverTimestamp(),
       };
       await addDoc(collection(db, 'messages'), newMessage).catch((error) => {
@@ -48,7 +48,7 @@ const ChatBox = ({ user }) => {
   return (
     <Box className="chat__box">
       <Box className="chat__header">
-        {user && user.photoURL && <Avatar src={user.photoURL} alt="" />}
+        {user && user.photoURL && <Avatar  src={user.photoURL} alt="" />}
 
         <p>{user?.displayName}</p>
       </Box>
