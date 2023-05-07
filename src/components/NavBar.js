@@ -14,30 +14,31 @@ const NavBar = () => {
     const provider = new GoogleAuthProvider();
     signInWithRedirect(auth, provider);
   };
+
   const signOut = () => {
     auth.signOut();
   };
 
   return (
     <>
-    <nav className="nav-bar">
-      <h1>Chater</h1>
-      {user ? (
-        <button onClick={signOut} className="sign-out" type="button">
-          Salir
-        </button>
-      ) : (
-        <button className="sign-in">
-          <img
-            onClick={googleSignIn}
-            src={GoogleSignin}
-            alt="sign in with google"
-            type="button"
-          />
-        </button>
-      )}
-    </nav>
-  {!user ? <Welcome /> : <ChatBox />}
+      <nav className="nav-bar">
+        <h1>Chater</h1>
+        {user ? (
+          <button onClick={signOut} className="sign-out" type="button">
+            Salir
+          </button>
+        ) : (
+          <button className="sign-in">
+            <img
+              onClick={googleSignIn}
+              src={GoogleSignin}
+              alt="sign in with google"
+              type="button"
+            />
+          </button>
+        )}
+      </nav>
+      {!user ? <Welcome /> : <ChatBox user={user}/>}
     </>
   );
 };
