@@ -1,8 +1,9 @@
 import React from "react";
 import { auth, db } from "../firebase";
-import { signInWithPopup } from "firebase/auth";
 import ChatBox from "./ChatBox";
 import { useState, useEffect } from "react";
+
+
 
 const Welcome = () => {
   const [user, setUser] = useState(null);
@@ -17,13 +18,9 @@ const Welcome = () => {
 
   const loginWithGoogle = () => {
     const provider = new db.auth.GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        setUser(result.user);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    auth.signInWithPopup(provider).then((result) => {
+      setUser(result.user);
+    });
   };
 
   return user !== null ? (
