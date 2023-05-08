@@ -3,9 +3,9 @@ import GoogleSignin from "../img/btn_google_signin_dark_pressed_web.png";
 import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
-import Welcome from "./Welcome";
 import ChatBox from './ChatBox';
-
+import Register from "./Register";
+import Welcome from "./Welcome";
 
 const NavBar = () => {
   const [user] = useAuthState(auth);
@@ -23,6 +23,7 @@ const NavBar = () => {
     <>
       <nav className="nav-bar">
         <h1>Chater</h1>
+        
         {user ? (
           <button onClick={signOut} className="sign-out" type="button">
             Salir
@@ -38,7 +39,8 @@ const NavBar = () => {
           </button>
         )}
       </nav>
-      {!user ? <Welcome /> : <ChatBox user={user}/>}
+      <Register />
+      {!user ? <Welcome /> : <ChatBox user={user} />}
     </>
   );
 };
