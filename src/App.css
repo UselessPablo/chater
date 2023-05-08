@@ -142,3 +142,8 @@ input {
   background-color: #37064b;
   font-weight: 600;
 }
+a{
+  text-decoration: none;
+  color: rgb(24, 163, 24);
+  font-weight: bold;
+}
