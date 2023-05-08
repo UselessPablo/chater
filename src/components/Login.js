@@ -1,29 +1,29 @@
-import {useState, useEffect, useRef} from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { auth } from "../firebase";
 import ChatBox from "./ChatBox";
-import {onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile} from 'firebase/auth';
-import {storage} from '../firebase';
-import {getDownloadURL, uploadBytes, ref as sRef} from '@firebase/storage';
-import {Link} from 'react-router-dom';
-import {Input, Box, Button, Avatar, TextField, Typography, IconButton} from '@mui/material';
-import {Visibility, VisibilityOff} from '@mui/icons-material';
+import { onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile } from 'firebase/auth';
+import { storage } from '../firebase';
+import { getDownloadURL, uploadBytes, ref as sRef } from '@firebase/storage';
+import { Link } from 'react-router-dom';
+import { Input, Box, Button, Avatar, TextField, Typography, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Snackbar from '@mui/material/Snackbar';
 
 
 const Login = () => {
 
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
-  const [email, setMail] = useState('');
-  const [file, setFile] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const formRef = useRef(null);
-  const [avatar, setAvatar] = useState(null);
-  const [nombre, setNombre] = useState(null)
-  const [showPassword, setShowPassword] = useState(false);
-  const [open, setOpen] = useState(false);
- 
+    const [password, setPassword] = useState("");
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
+    const [email, setMail] = useState('');
+    const [file, setFile] = useState(null);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const formRef = useRef(null);
+    const [avatar, setAvatar] = useState(null);
+    const [nombre, setNombre] = useState(null)
+    const [showPassword, setShowPassword] = useState(false);
+    const [open, setOpen] = useState(false);
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
@@ -32,7 +32,8 @@ const Login = () => {
             }
         });
         return unsubscribe;
-    }, );
+    }, []);
+
     const handleLogin = (e) => {
         e.preventDefault();
         let email = formRef.current.email.value;
@@ -55,13 +56,16 @@ const Login = () => {
                 setError(error.message);
             });
     };
+
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
+
     const emailHandler = (e) => {
         let mail = e.target.value;
         setMail(mail);
     };
+
     const handlerForgetPassword = () => {
         sendPasswordResetEmail(auth, email)
             .then(() => {
@@ -72,145 +76,150 @@ const Login = () => {
                 setError(error.message);
             });
     };
+
     const handleUpload = () => {
-        const storageRef = sRef(storage, 'usuario');
+        if (!file) {
+            console.error('No file selected');
+            return;
+        }
+        if (!user) {
+            console.error('No user is signed in');
+            return;
+        }
+        const storageRef = sRef(storage, `avatar/${user.uid}`);
         uploadBytes(storageRef, file)
             .then((snapshot) => {
                 console.log(snapshot);
-                getDownloadURL(snapshot.ref).then((url) => {
+                getDownloadURL(snapshot).then((url) => {
                     console.log(url);
-                    const user = auth.currentUser;
-                    if (user) {
-                        if (user.photoURL !== url) {
-                            updateProfile(user, {
-                                photoURL: url,
-                            })
-                                .then(() => {
-                                    console.log('Profile updated successfully!');
-                                    setAvatar(url);                  
-                                })
-                                .catch((error) => {
-                                    console.error(error);
-                                    setError(error.message);
-                                });
-                        } else {
-                            console.log('Photo URL is already set to', url);
-                        }
-                    } else {
-                        console.error('No user is signed in');
-                    }
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-                setError(error.message);
+                    setAvatar(url);
+                    updateProfile(auth.currentUser, {
+                        photoURL: url,
+                    })
+                        .then(() => {
+                            console.log('Profile photo updated');
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            setError(error.message);
+                        });
+                })
+                    .catch((error) => {
+                        console.error(error);
+                        setError(error.message);
+                    });
             });
-    };
-    const handleLogin2 = (e) => {
-        e.preventDefault();
-        const names = formRef.current.name.value;
-        const apellidos = formRef.current.apellido.value;
-        const telefonos = formRef.current.telefono.value;
-        setNombre(names);
-        const user = auth.currentUser;
-        updateProfile(user, {
-            displayName: `${names} ${apellidos}`,
-            phoneNumber: telefonos
+
+
+const handleNameChange = () => {
+    if (!nombre) {
+        console.error('Name is required');
+        return;
+    }
+    if (!user) {
+        console.error('No user is signed in');
+        return;
+    }
+    updateProfile(auth.currentUser, {
+        displayName: nombre,
+    })
+        .then(() => {
+            console.log('Profile name updated');
+            formRef.current.reset();
+            setOpen(true);
         })
-            .then(() => {
-                console.log('Perfil de usuario actualizado');
-                setNombre(names);
-            })
-            .catch((error) => {
-                console.error(error);
-                setError(error.message);
-            });
-    };
- 
-  return user !== null ? (
-    <ChatBox user={user} />
-  ) : (
-       <Box sx={{ ml: 6, mt: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>   
-          
-            <Snackbar
-                sx={{ borderRadius:4}}
-                open={open}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                autoHideDuration={2400} // ocultar después de 3 segundos
-                onClose={() => setOpen(false)} // cerrar el Snackbar
-                message="Logueado con Exito"   
-            />
-            {user && avatar && (
-                <Avatar src={avatar} />
-            )}
-            {!loggedIn && (
-                <form ref={formRef} >
-                    <h3 >Ingresa con Email y contraseña </h3>
-                    <Box >
-                        <TextField
-                            variant='filled'
-                            type="email"
-                            name="email"
-                            onChange={emailHandler}
-                            aria-describedby="emailHelp"
-                            color='info'
-                        />
-                    </Box>    
-                    <Box >
-                        <TextField
-                            variant='filled'
-                            type={showPassword ? 'text' : 'password'}
-                            name="password"
-                            id="password"
-                            label="Password"
-                            
-                        />
-
-                        <IconButton sx={{mt:1, ml:1}} onClick={() => setShowPassword(!showPassword)}>
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                    </Box>
-                    
-                    <p><small className='red'>{error}</small></p>            
-                    
-                    <Button onClick={handleLogin} sx={{mb:2}} variant='contained' color='info' size='small'>Enviar</Button>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                    <p><small>No tienes cuenta? Crea una... <Link to={'/Register'}>REGISTRARSE</Link></small></p>
-                    <p><small>Olvidaste tu contraseña </small><Button sx={{ ml: 1, color:'white' }} variant='contained'  size='small' onClick={handlerForgetPassword}>Restablecer</Button></p>
-                           
-                    </Box>
-                </form>
-            )}
-            {loggedIn && (
-                <>
-                    <Box sx={{}}>
-                        {/* <Box sx={{ mb: 4, ml:6, }}> */}
-                        <Input type="file" onChange={handleFileChange} placeholder='Seleciona una imagen de avatar' />
-                        <Button onClick={handleUpload}
-                            variant='contained'
-                            color='info2'
-                            size='small'
-                            sx={{ ml: 2, mt: 2 }}
-                        >cargar imagen</Button>
-                    </Box>
-                    <Typography textAlign='start' sx={{ mt: 4, ml: 5 }}>Completa el siguiente formulario</Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
-                        <form className='formDetails' ref={formRef} onSubmit={handleLogin2}>
-                            <TextField placeholder='Nombre' variant='filled' name='name' type='text' onChange={(e) => {
-                                setNombre(e.target.value);
-                            }} />
-                            <TextField placeholder='Apellido' variant='filled' name='apellido' type='text' />
-                            <TextField placeholder='Teléfono' variant='filled' name='telefono' type='number' />
-                            <Button variant='contained' sx={{ mt: 2, mb: 5 }} type="submit">Enviar</Button>
-                        </form>
-                    </Box>
-
-                </>
-            )}
-
-        </Box>
-    );
+        .catch((error) => {
+            console.error(error);
+            setError(error.message);
+        });
 };
 
+const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+};
 
+const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+};
+
+const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setOpen(false);
+};
+
+return (
+<>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            {user ? (
+                <ChatBox avatar={avatar} />
+            ) : (
+                <Box sx={{ width: '400px', p: 4, border: '1px solid #ccc', borderRadius: '8px', textAlign: 'center' }}>
+                    <Avatar alt="Avatar" src={avatar} sx={{ width: '100px', height: '100px', margin: '0 auto 16px' }} />
+                    <form ref={formRef} onSubmit={handleLogin}>
+                        <Typography variant="h5" gutterBottom>
+                            Login
+                        </Typography>
+                        <TextField
+                            label="Email"
+                            variant="outlined"
+                            type="email"
+                            name="email"
+                            fullWidth
+                            margin="normal"
+                            onChange={emailHandler}
+                        />
+                        <TextField
+                            label="Password"
+                            variant="outlined"
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            fullWidth
+                            margin="normal"
+                            InputProps={{
+                                endAdornment: (
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                ),
+                            }}
+                        />
+                        <Button variant="contained" type="submit" fullWidth>
+                            Sign In
+                        </Button>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                            <Link to="/signup">Create new account</Link>
+                            <Link to="#" onClick={handlerForgetPassword}>
+                                Forgot password?
+                            </Link>
+                        </Box>
+                    </form>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', mt: 3 }}>
+                        <Typography variant="h6" gutterBottom>
+                            Upload profile photo
+                        </Typography>
+                        <Input type="file" onChange={handleFileChange} />
+                        <Button variant="contained" onClick={handleUpload} sx={{ mt: 1 }}>
+                            Upload
+                        </Button>
+                    </Box>
+       </Box>
+            )}
+        
+        </Box>
+        
+        
+   
+       </>     
+    
+    
+    );
+};
+}
 export default Login;

@@ -57,9 +57,9 @@ const ChatBox = ({ user }) => {
   };
   return (
     <Box className="chat__box">
+      <Button onClick={handleSignOut}>Logout</Button>
       <Box className="chat__header">
         {user && user.photoURL && <Avatar  src={user.photoURL} alt="" />}
-
         <p>{user?.displayName}</p>
       </Box>
       <Box className="chat__messages">
@@ -78,12 +78,11 @@ const ChatBox = ({ user }) => {
             placeholder="Type a message here"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-          />
-         
-          <Button>&rarr;</Button>
+          /> 
+          <Button type="submit" name="send-button">&rarr;</Button>
         </form>
       </Box>
-      <Button onClick={handleSignOut}>Logout</Button>
+     
     </Box>
   );
 };

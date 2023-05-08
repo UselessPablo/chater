@@ -87,7 +87,7 @@ const Register = () => {
                     <p><small className='error' >{error}</small></p>
                     <p><small >{success}</small></p>
                 </Box>
-                <Button type="submit" variant='contained' size='small' color='info' sx={{ ml: 15, mt: 1, mb: 2 }} >Enviar</Button>
+                <Button type="submit" variant='contained' size='small' sx={{ ml: 15, mt: 1, mb: 2 }} >Enviar</Button>
                 <p><small>Ya tienes cuenta? <Link to={'/Login'} onClick={clear}>LOGIN</Link></small></p>
             </form>
 
@@ -96,6 +96,4 @@ const Register = () => {
     );
 };
  
-
-
 export default Register;
