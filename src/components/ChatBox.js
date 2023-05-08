@@ -5,12 +5,15 @@ import { serverTimestamp, orderBy } from "firebase/firestore";
 import { doc, addDoc, collection, query, onSnapshot } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { Box,Typography,Avatar, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { getAuth, signOut } from 'firebase/auth';
+
 const ChatBox = ({ user }) => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
-
-
+  const navigate=useNavigate();
+  const auth = getAuth();
   useEffect(() => {
     const db = getFirestore();
     const messagesCollection = collection(db, 'messages');
@@ -44,7 +47,14 @@ const ChatBox = ({ user }) => {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    navigate('/Login')
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Box className="chat__box">
       <Box className="chat__header">
@@ -73,6 +83,7 @@ const ChatBox = ({ user }) => {
           <Button>&rarr;</Button>
         </form>
       </Box>
+      <Button onClick={handleSignOut}>Logout</Button>
     </Box>
   );
 };
